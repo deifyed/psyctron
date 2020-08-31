@@ -1,0 +1,4 @@
+function myHelloWorldPrinter():
+	print('Hello world"!')
+
+myHelloWorldPrinter()
