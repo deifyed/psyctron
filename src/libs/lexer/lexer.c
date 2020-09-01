@@ -79,16 +79,25 @@ void tokenize(char * data) {
 		}
 
 		switch (c) {
-			case 32: // space
-				pushToken(tokens, token_buffer, token_count++, max_token_length);
-				resetBuffer(token_buffer, max_token_length);
-				buffer_index = 0;
-				break;
-			case 9: // tab
+			// Ignore current character
 			case 10: // newline
+			case 32: // space
+				if (buffer_index != 0) {
+					pushToken(tokens, token_buffer, token_count++, max_token_length);
+					resetBuffer(token_buffer, max_token_length);
+					buffer_index = 0;
+				}
+				break;
+			// Include current character
+			case 9: // tab
 			case 40: // (
 			case 41: // )
+			case 44: // ,
 			case 58: // :
+			case 91: // [
+			case 93: // ]
+			case 123: // {
+			case 125: // }
 				if (buffer_index != 0) {
 					pushToken(tokens, token_buffer, token_count++, max_token_length);
 					resetBuffer(token_buffer, max_token_length);
@@ -100,6 +109,7 @@ void tokenize(char * data) {
 				resetBuffer(token_buffer, max_token_length);
 				buffer_index = 0;
 				break;
+			// String voodoo
 			case 34: // "
 			case 39: // '
 				string_mode = c;
@@ -107,20 +117,12 @@ void tokenize(char * data) {
 				token_buffer[buffer_index] = c;
 				buffer_index += 1;
 				break;
-			/*
-			case 32: // space
-			case 34: // "
-			case 39: // '
-				continue;
-			*/
+			// The rest
 			default:
 				token_buffer[buffer_index] = c;
 				buffer_index += 1;
 		}
 	}
-
-	for (int index = 0; index < token_count; index++)
-		printf("token: \"%s\"\n", tokens[index]);
 
 	free(token_buffer);
 	deallocateTokenStorage(tokens, max_tokens);
@@ -128,7 +130,7 @@ void tokenize(char * data) {
 
 
 int main() {
-	FILE * file = fopen("hw.psy", "r");
+	FILE * file = fopen("../../../examples/advanced.psy", "r");
 	int size = getFileSize(file);
 
 	char * data = malloc(sizeof(char) * size);

@@ -1,0 +1,13 @@
+function myHelloWorldPrinter():
+	print('Hello world"!')
+
+myHelloWorldPrinter()
+
+const myDict = dict()
+const myList = list()
+
+const settingList = [1, 2, 3, 4, 5, 6]
+const settingDictionary = {
+	myFace: 'awesome',
+	myNose: 'crazy'
+}
